@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>URL shortener</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+
+
+<form action="/expand" method="GET" id="expandUrl">
+    <div>
+        <label for="nameExpander">Enter the url you would like to expand:</label>
+        <input name="url" id="nameExpander">
+        <button>Expand!</button>
+    </div>
+</form>
+
+<form action="/shorten" method="POST" id="shortenUrl">
+    <div>
+        <label for="nameShortener">Enter the url you would like to shorten:</label>
+        <input name="url" id="nameShortener">
+        <button>Shorten!</button>
+    </div>
+</form>
+</body>
+</html>
