@@ -1,47 +1,42 @@
 package com.mjgonzales.urlshortener.shortener;
 
-import com.mjgonzales.urlshortener.entity.IdByUrl;
-import com.mjgonzales.urlshortener.entity.UrlById;
-import com.mjgonzales.urlshortener.repository.IdByUrlRepository;
-import com.mjgonzales.urlshortener.repository.UrlByIdRepository;
+import com.mjgonzales.urlshortener.entity.Url;
+import com.mjgonzales.urlshortener.repository.UrlRepository;
 
 import java.util.Optional;
 
 public class H2StorageManager implements StorageManager {
-    private final UrlByIdRepository urlByIdRepository;
-    private final IdByUrlRepository idByUrlRepository;
+    private final UrlRepository urlRepository;
 
-    public H2StorageManager(UrlByIdRepository urlByIdRepository, IdByUrlRepository idByUrlRepository) {
-        this.urlByIdRepository = urlByIdRepository;
-        this.idByUrlRepository = idByUrlRepository;
+    public H2StorageManager(UrlRepository urlRepository) {
+        this.urlRepository = urlRepository;
     }
 
     @Override
     public boolean hasURL(String url) {
-        return idByUrlRepository.existsById(url);
+        return urlRepository.findByUrl(url).isPresent();
     }
 
     @Override
-    public int getID(String url) {
-        Optional<IdByUrl> res = idByUrlRepository.findById(url);
-        return res.map(IdByUrl::getId).orElse(-1);
+    public Optional<Integer> getID(String url) {
+        Optional<Url> res = urlRepository.findByUrl(url);
+        return res.map(Url::getId);
     }
 
     @Override
     public int addURL(String url) {
-        UrlById res = urlByIdRepository.save(new UrlById(url));
-        idByUrlRepository.save(new IdByUrl(res.getUrl(), res.getId()));
+        Url res = urlRepository.save(new Url(url));
         return res.getId();
     }
 
     @Override
     public boolean hasID(int id) {
-        return urlByIdRepository.existsById(id);
+        return urlRepository.existsById(id);
     }
 
     @Override
-    public String getFromID(int id) {
-        Optional<UrlById> res = urlByIdRepository.findById(id);
-        return res.map(UrlById::getUrl).orElse(null);
+    public Optional<String> getFromID(int id) {
+        Optional<Url> res = urlRepository.findById(id);
+        return res.map(Url::getUrl);
     }
 }

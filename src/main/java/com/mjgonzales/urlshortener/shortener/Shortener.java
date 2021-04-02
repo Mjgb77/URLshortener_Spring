@@ -1,5 +1,7 @@
 package com.mjgonzales.urlshortener.shortener;
 
+import java.util.Optional;
+
 public class Shortener {
     private StorageManager storage;
     private ShortenerEncoder shortenerEncoder;
@@ -10,14 +12,13 @@ public class Shortener {
     }
 
     public String toShortURL(String originalURL) {
-        int id = storage.hasURL(originalURL) ?
-                storage.getID(originalURL) : storage.addURL(originalURL);
+        int id = storage.getID(originalURL).orElseGet(() -> storage.addURL(originalURL));
         return shortenerEncoder.idToShortURL(id);
     }
 
-    public String toOriginalURL(String shortURL) {
+    public Optional<String> toOriginalURL(String shortURL) {
         int id = shortenerEncoder.shortURLtoID(shortURL);
-        return storage.hasID(id) ? storage.getFromID(id) : null;
+        return storage.getFromID(id);
     }
 
 }

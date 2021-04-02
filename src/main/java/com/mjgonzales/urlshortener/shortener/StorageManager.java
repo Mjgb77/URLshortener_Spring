@@ -1,14 +1,16 @@
 package com.mjgonzales.urlshortener.shortener;
 
+import java.util.Optional;
+
 interface StorageManager {
 
     boolean hasURL(String url);
 
-    int getID(String url);
+    Optional<Integer> getID(String url);
 
     int addURL(String url);
 
     boolean hasID(int id);
 
-    String getFromID(int id);
+    Optional<String> getFromID(int id);
 }

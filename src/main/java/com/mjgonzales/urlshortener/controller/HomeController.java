@@ -1,7 +1,6 @@
 package com.mjgonzales.urlshortener.controller;
 
-import com.mjgonzales.urlshortener.repository.IdByUrlRepository;
-import com.mjgonzales.urlshortener.repository.UrlByIdRepository;
+import com.mjgonzales.urlshortener.repository.UrlRepository;
 import com.mjgonzales.urlshortener.shortener.H2StorageManager;
 import com.mjgonzales.urlshortener.shortener.Shortener;
 import com.mjgonzales.urlshortener.shortener.ShortenerEncoder;
@@ -11,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 public class HomeController {
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -18,8 +19,8 @@ public class HomeController {
     private Shortener shortener;
 
     @Autowired
-    public HomeController(UrlByIdRepository urlByIdRepository, IdByUrlRepository idByUrlRepository) {
-        H2StorageManager storage = new H2StorageManager(urlByIdRepository, idByUrlRepository);
+    public HomeController(UrlRepository urlRepository) {
+        H2StorageManager storage = new H2StorageManager(urlRepository);
         ShortenerEncoder shortenerEncoder = new ShortenerEncoder(ALPHABET);
         this.shortener = new Shortener(storage, shortenerEncoder);
     }
@@ -31,9 +32,9 @@ public class HomeController {
 
     @GetMapping("/expand")
     public String expandURL(@RequestParam(value = "url") String url) {
-        String originalURL = shortener.toOriginalURL(url);
+        Optional<String> originalURL = shortener.toOriginalURL(url);
 
-        if (originalURL == null) return "You haven't shortened that url before";
-        else return "Your original URL is: " + originalURL;
+        if (originalURL.isEmpty()) return "You haven't shortened that url before";
+        else return "Your original URL is: " + originalURL.get();
     }
 }

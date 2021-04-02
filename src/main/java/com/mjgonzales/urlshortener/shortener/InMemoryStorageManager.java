@@ -1,6 +1,7 @@
 package com.mjgonzales.urlshortener.shortener;
 
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.Vector;
 
 public class InMemoryStorageManager implements StorageManager {
@@ -18,8 +19,8 @@ public class InMemoryStorageManager implements StorageManager {
     }
 
     @Override
-    public int getID(String url) {
-        return idByURL.get(url);
+    public Optional<Integer> getID(String url) {
+        return Optional.ofNullable(idByURL.get(url));
     }
 
     @Override
@@ -36,7 +37,7 @@ public class InMemoryStorageManager implements StorageManager {
     }
 
     @Override
-    public String getFromID(int id) {
-        return URLs.elementAt(id);
+    public Optional<String> getFromID(int id) {
+        return Optional.of(URLs.elementAt(id));
     }
 }

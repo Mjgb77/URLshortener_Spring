@@ -1,20 +1,20 @@
 package com.mjgonzales.urlshortener.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-public class UrlById {
+@Table(indexes = {@Index(columnList = "url")})
+public class Url {
     @Id
     @GeneratedValue
     private Integer id;
+    @Column(length = 1024)
     private String url;
 
-    public UrlById() {
+    public Url() {
     }
 
-    public UrlById(String url) {
+    public Url(String url) {
         this.url = url;
     }
 
